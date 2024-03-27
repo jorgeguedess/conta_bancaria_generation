@@ -3,64 +3,27 @@ import { colors } from "./src/util/Cores";
 import { Conta } from "./src/model/Conta";
 
 export function main() {
-  let opcao: number;
+  let opcao: number = 0;
 
-  let c1: Conta = new Conta(1, 123, 1, "João Pedro", 100000);
-  c1.visualizar();
-
-  // // Modificando o meu Saldo
-  // c1.set_saldo(1500000);
-
-  // // Recuperando o valor do meu Saldo
-  // console.log(c1.get_saldo());
-
-  console.log(c1.sacar(2000000));
-
-  c1.visualizar();
-
-  c1.depositar(5000);
-
-  c1.visualizar();
+  // let pessoa1: Conta = new Conta(1, 123, 1, "João Pedro", 100000);
+  // pessoa1.visualizar();
+  // console.log(pessoa1.sacar(5000));
+  // pessoa1.visualizar();
 
   while (true) {
-    console.log(
-      colors.bg.black,
-      colors.fg.yellow,
-      "*****************************************************"
-    );
-    console.log("                                                     ");
-    console.log("                BANCO DO BRAZIL COM Z                ");
-    console.log("                                                     ");
-    console.log("*****************************************************");
-    console.log("                                                     ");
-    console.log("            1 - Criar Conta                          ");
-    console.log("            2 - Listar todas as Contas               ");
-    console.log("            3 - Buscar Conta por Numero              ");
-    console.log("            4 - Atualizar Dados da Conta             ");
-    console.log("            5 - Apagar Conta                         ");
-    console.log("            6 - Sacar                                ");
-    console.log("            7 - Depositar                            ");
-    console.log("            8 - Transferir valores entre Contas      ");
-    console.log("            9 - Sair                                 ");
-    console.log("                                                     ");
-    console.log("*****************************************************");
-    console.log(
-      "                                                     ",
-      colors.reset
-    );
+    console.log(exibirMenu());
+    let opcaoInvalida: boolean;
+    const mensagemErroOpcao = `${exibirMenu()}${colors.reset}\n${
+      colors.bg.black
+    }${colors.fg.red}Opção inválida. Digite de 1 a 9${colors.reset}`;
 
-    console.log("Entre com a opção desejada: ");
-    opcao = readlinesync.questionInt("");
-
-    if (opcao == 9) {
-      console.log(
-        colors.fg.greenstrong,
-        "\nBanco do Brazil com Z - O seu Futuro começa aqui!"
-      );
-      sobre();
-      console.log(colors.reset, "");
-      process.exit(0);
-    }
+    do {
+      opcao = readlinesync.questionInt("Entre com a opção desejada:", {
+        limitMessage: mensagemErroOpcao,
+      });
+      opcaoInvalida = opcao <= 0 || opcao > 9;
+      if (opcaoInvalida) console.log(mensagemErroOpcao);
+    } while (opcaoInvalida);
 
     switch (opcao) {
       case 1:
@@ -123,28 +86,59 @@ export function main() {
 
         keyPress();
         break;
-      default:
-        console.log(colors.fg.whitestrong, "\nOpção Inválida!\n", colors.reset);
 
-        keyPress();
-        break;
+      case 9:
+        console.log(
+          colors.fg.magenta,
+          "\n$$ Banco Zé Carioca $$ - O jeito carioca de investir no seu futuro!"
+        );
+        sobre();
+        console.log(colors.reset, "");
+        process.exit(0);
     }
   }
 }
 
 /* Função com os dados da pessoa desenvolvedora */
 function sobre(): void {
-  console.log("\n*****************************************************");
-  console.log("Projeto Desenvolvido por: ");
-  console.log("Generation Brasil - generation@generation.org");
-  console.log("github.com/conteudoGeneration");
-  console.log("*****************************************************");
+  console.log(`
+  *****************************************************
+
+  Projeto Desenvolvido por:
+  
+  Jorge Guedes - apoio da Generation Brasil
+  https://github.com/jorgeguedess
+
+  *****************************************************
+  `);
 }
 
 function keyPress(): void {
   console.log(colors.reset, "");
   console.log("\nPressione enter para continuar...");
   readlinesync.prompt();
+}
+
+function exibirMenu(): string {
+  return `
+  ${colors.bg.black}${colors.fg.green}*****************************************************
+  
+    $$ BANCO ZÉ CARIOCA $$
+
+  *****************************************************
+
+  1 - Criar Conta                          
+  2 - Listar todas as Contas               
+  3 - Buscar Conta por Numero              
+  4 - Atualizar Dados da Conta             
+  5 - Apagar Conta                         
+  6 - Sacar                                
+  7 - Depositar                            
+  8 - Transferir valores entre Contas      
+  9 - Sair                                 
+  
+  *****************************************************                        
+  ${colors.reset}`;
 }
 
 main();
