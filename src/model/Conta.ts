@@ -1,118 +1,79 @@
 export class Conta {
-  // Atributos do Objeto da Classe Conta
+  // Atributos da Classe Conta
   private _numero: number;
   private _agencia: number;
   private _tipo: number;
   private _titular: string;
   private _saldo: number;
 
-  // Método Construtor - Instanciar (Criar) um novo Objeto da Classe Conta
   constructor(
-    _numero: number,
-    _agencia: number,
-    _tipo: number,
-    _titular: string,
-    _saldo: number
+    numero: number,
+    agencia: number,
+    tipo: number,
+    titular: string,
+    saldo: number
   ) {
-    this._numero = _numero;
-    this._agencia = _agencia;
-    this._tipo = _tipo;
-    this._titular = _titular;
-    this._saldo = _saldo;
+    this._numero = numero;
+    this._agencia = agencia;
+    this._tipo = tipo;
+    this._titular = titular;
+    this._saldo = saldo;
   }
 
-  /**
-   * Getter _numero
-   * @return {number}
-   */
-  public get_numero(): number {
+  public get numero(): number {
     return this._numero;
   }
 
-  /**
-   * Getter _agencia
-   * @return {number}
-   */
-  public get_agencia(): number {
+  public get agencia(): number {
     return this._agencia;
   }
 
-  /**
-   * Getter _tipo
-   * @return {number}
-   */
-  public get_tipo(): number {
+  public get tipo(): number {
     return this._tipo;
   }
 
-  /**
-   * Getter _titular
-   * @return {string}
-   */
-  public get_titular(): string {
+  public get titular(): string {
     return this._titular;
   }
 
-  /**
-   * Getter _saldo
-   * @return {number}
-   */
-  public get_saldo(): number {
+  public get saldo(): number {
     return this._saldo;
   }
 
-  /**
-   * Setter _numero
-   * @param {number} value
-   */
-  public set_numero(value: number) {
+  public set numero(value: number) {
     this._numero = value;
   }
 
-  /**
-   * Setter _agencia
-   * @param {number} value
-   */
-  public set_agencia(value: number) {
+  public set agencia(value: number) {
     this._agencia = value;
   }
 
-  /**
-   * Setter _tipo
-   * @param {number} value
-   */
-  public set_tipo(value: number) {
+  public set tipo(value: number) {
     this._tipo = value;
   }
 
-  /**
-   * Setter _titular
-   * @param {string} value
-   */
-  public set_titular(value: string) {
+  public set titular(value: string) {
     this._titular = value;
   }
 
-  /**
-   * Setter _saldo
-   * @param {number} value
-   */
-  public set_saldo(value: number) {
+  public set saldo(value: number) {
     this._saldo = value;
   }
 
+  // Método Sacar
   public sacar(valor: number): boolean {
     if (this._saldo >= valor) {
-      this.set_saldo(this._saldo - valor);
+      this.saldo = this._saldo - valor;
       return true;
     }
 
-    console.log("Saldo é insuficiente!");
+    console.log("\nSaldo insuficiente!");
     return false;
   }
 
+  // Método Depositar
   public depositar(valor: number): void {
-    this.set_saldo(this._saldo + valor);
+    this.saldo = this._saldo + valor;
   }
 
   public visualizar(): void {
@@ -127,7 +88,7 @@ export class Conta {
         break;
     }
 
-    console.log("*****************************************************");
+    console.log("\n*****************************************************");
     console.log("Dados da Conta");
     console.log("*****************************************************");
     console.log(`Número da conta: ${this._numero}`);
