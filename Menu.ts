@@ -1,44 +1,34 @@
 ﻿import readlinesync = require("readline-sync");
 import { colors } from "./src/util/Colors";
+import { ContaController } from "./src/controller/ContaController";
 import { ContaCorrente } from "./src/model/ContaCorrente";
 import { ContaPoupanca } from "./src/model/ContaPoupanca";
 
 export function main() {
-  let opcao: number = 0;
+  let opcao: number;
 
-  console.log(
-    `\n${colors.bg.black}${colors.fg.red}CONTA CORRENTE${colors.reset}`
-  );
-  const contacorrente: ContaCorrente = new ContaCorrente(
-    2,
-    456,
+  let contas: ContaController = new ContaController();
+
+  const contaCorrente1: ContaCorrente = new ContaCorrente(
     1,
-    "Fulano",
-    500000,
+    123,
+    1,
+    "Adriana",
+    10000,
     1000
   );
-  contacorrente.visualizar();
-  contacorrente.sacar(1000);
-  contacorrente.visualizar();
-  contacorrente.depositar(5000);
-  contacorrente.visualizar();
 
-  console.log(
-    `\n${colors.bg.black}${colors.fg.red}CONTA POUPANÇA${colors.reset}`
-  );
-  const contapoupanca: ContaPoupanca = new ContaPoupanca(
-    3,
-    123,
+  const contaPoupanca1: ContaPoupanca = new ContaPoupanca(
+    20,
+    544,
     2,
-    "Ciclano",
-    10000,
-    10
+    "João",
+    5000,
+    500
   );
-  contapoupanca.visualizar();
-  contapoupanca.sacar(5000);
-  contapoupanca.visualizar();
-  contapoupanca.depositar(100);
-  contapoupanca.visualizar();
+
+  contas.cadastrar(contaCorrente1);
+  contas.cadastrar(contaPoupanca1);
 
   while (true) {
     console.log(exibirMenu());
@@ -67,6 +57,8 @@ export function main() {
           "\n\nListar todas as Contas\n\n",
           colors.reset
         );
+
+        contas.listarTodas();
 
         keyPress();
         break;
@@ -138,6 +130,7 @@ function sobre(): void {
   
   Jorge Guedes - apoio da Generation Brasil
   https://github.com/jorgeguedess
+  https://www.linkedin.com/in/jorgeguedess/
 
   *****************************************************
   `);
