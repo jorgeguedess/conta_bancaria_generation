@@ -15,7 +15,7 @@ export class ContaCorrente extends Conta {
     this._limite = limite;
   }
 
-  public get limite(): number {
+  public get limite() {
     return this._limite;
   }
 
@@ -25,13 +25,13 @@ export class ContaCorrente extends Conta {
 
   // Método Sacar
   public sacar(valor: number): boolean {
-    if (this.saldo + this._limite >= valor) {
-      this.saldo = this.saldo - valor;
-      return true;
+    if (this.saldo + this._limite < valor) {
+      console.log("\nSaldo insuficiente!");
+      return false;
     }
 
-    console.log("\nSaldo insuficiente!");
-    return false;
+    this.saldo -= valor;
+    return true;
   }
 
   public visualizar(): void {

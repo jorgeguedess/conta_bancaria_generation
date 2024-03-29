@@ -1,4 +1,4 @@
-export class Conta {
+export abstract class Conta {
   // Atributos da Classe Conta
   private _numero: number;
   private _agencia: number;
@@ -62,18 +62,17 @@ export class Conta {
 
   // Método Sacar
   public sacar(valor: number): boolean {
-    if (this._saldo >= valor) {
-      this.saldo = this._saldo - valor;
-      return true;
+    if (this._saldo < valor) {
+      console.log("\nSaldo insuficiente!");
+      return false;
     }
-
-    console.log("\nSaldo insuficiente!");
-    return false;
+    this._saldo -= valor;
+    return true;
   }
 
   // Método Depositar
   public depositar(valor: number): void {
-    this.saldo = this._saldo + valor;
+    this._saldo += valor;
   }
 
   public visualizar(): void {
