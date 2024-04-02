@@ -5,72 +5,128 @@ import { ContaCorrente } from "./src/model/ContaCorrente";
 import { ContaPoupanca } from "./src/model/ContaPoupanca";
 
 export function main() {
-  let opcao: number;
-
   let contas: ContaController = new ContaController();
 
-  const contaCorrente1: ContaCorrente = new ContaCorrente(
-    1,
-    123,
-    1,
-    "Adriana",
-    10000,
-    1000
-  );
+  let opcao: number;
+  let numero: number;
+  let agencia: number;
+  let tipo: number;
+  let saldo: number;
+  let limite: number;
+  let aniversario: number;
+  let valor: number;
+  let numeroDestino: number;
 
-  const contaPoupanca1: ContaPoupanca = new ContaPoupanca(
-    20,
-    544,
+  let titular: string;
+  const tipoContas = ["Conta Corrente", "Conta Poupanca"];
+
+  /* Dados iniciais */
+  const contaCorrente: ContaCorrente = new ContaCorrente(
+    contas.gerarNumero(),
+    124,
+    1,
+    "Augusto Fernandez",
+    3500,
+    2200
+  );
+  contas.cadastrar(contaCorrente);
+
+  const contaPoupanca: ContaPoupanca = new ContaPoupanca(
+    contas.gerarNumero(),
+    125,
     2,
-    "João",
+    "Pedro Pedrosa",
     5000,
     500
   );
-
-  contas.cadastrar(contaCorrente1);
-  contas.cadastrar(contaPoupanca1);
+  contas.cadastrar(contaPoupanca);
 
   while (true) {
-    console.log(exibirMenu());
-    let opcaoInvalida: boolean;
-    const mensagemErroOpcao = `${exibirMenu()}${colors.reset}\n${
-      colors.bg.black
-    }${colors.fg.red}Opção inválida. Digite de 1 a 9${colors.reset}`;
-
-    do {
-      opcao = readlinesync.questionInt("Entre com a opção desejada:", {
-        limitMessage: mensagemErroOpcao,
-      });
-      opcaoInvalida = opcao <= 0 || opcao > 9;
-      if (opcaoInvalida) console.log(mensagemErroOpcao);
-    } while (opcaoInvalida);
+    exibirMenu();
+    opcao = readlinesync.questionInt("Entre com a opção desejada: ", {
+      limitMessage: `${colors.fg.red}Opção inválida. Digite de 1 a 9${colors.reset}\n`,
+    });
 
     switch (opcao) {
       case 1:
-        console.log(colors.fg.whitestrong, "\n\nCriar Conta\n\n", colors.reset);
+        console.log(
+          `${colors.fg.whitestrong}\n\nCriar Conta\n\n${colors.reset}`
+        );
 
+        agencia = readlinesync.questionInt("Digite o Número da agência: ", {
+          limitMessage: "Número inválido!\n",
+        });
+        titular = readlinesync.question("Digite o Nome do Titular da Conta: ");
+
+        tipo =
+          readlinesync.keyInSelect(tipoContas, "Digite o Tipo da Conta:", {
+            cancel: false,
+          }) + 1;
+
+        saldo = readlinesync.questionFloat("Digite o Saldo da conta (R$): ", {
+          limitMessage: "Valor do saldo inválido!\n",
+        });
+
+        switch (tipo) {
+          case 1:
+            limite = readlinesync.questionFloat(
+              "Digite o Limite da Conta (R$): ",
+              {
+                limitMessage: "Valor do limite inválido!\n",
+              }
+            );
+            const novaContaCorrente = new ContaCorrente(
+              contas.gerarNumero(),
+              agencia,
+              tipo,
+              titular,
+              saldo,
+              limite
+            );
+            contas.cadastrar(novaContaCorrente);
+            break;
+
+          case 2:
+            aniversario = readlinesync.questionInt(
+              "Digite o Dia do aniversário da Conta Poupança: "
+            );
+            const novaContaPoupanca = new ContaPoupanca(
+              contas.gerarNumero(),
+              agencia,
+              tipo,
+              titular,
+              saldo,
+              aniversario
+            );
+            contas.cadastrar(novaContaPoupanca);
+            break;
+        }
         keyPress();
         break;
+
       case 2:
         console.log(
-          colors.fg.whitestrong,
-          "\n\nListar todas as Contas\n\n",
-          colors.reset
+          `${colors.fg.whitestrong}\n\nListar todas as Contas\n\n${colors.reset}`
         );
 
         contas.listarTodas();
 
         keyPress();
         break;
+
       case 3:
         console.log(
-          colors.fg.whitestrong,
-          "\n\nConsultar dados da Conta - por número\n\n",
-          colors.reset
+          `${colors.fg.whitestrong}\n\nConsultar dados da Conta - por número\n\n${colors.reset}`
         );
+
+        numero = readlinesync.questionInt("Digite o número da Conta: ", {
+          limitMessage: "Número invalido!\n",
+        });
+        contas.procurarPorNumero(numero);
 
         keyPress();
         break;
+
       case 4:
         console.log(
           colors.fg.whitestrong,
@@ -78,32 +134,97 @@ export function main() {
           colors.reset
         );
 
+        numero = readlinesync.questionInt("Digite o número da Conta: ", {
+          limitMessage: "Número inválido!",
+        });
+
+        if (contas.buscarNoArray(numero) === null) {
+          console.log(
+            `${colors.fg.redstrong}\nA Conta numero: ${numero} não foi encontrada!${colors.reset}`
+          );
+          keyPress();
+          break;
+        }
+
+        agencia = readlinesync.questionInt("Digite o Número da agência: ", {
+          limitMessage: "Número inválido!",
+        });
+        titular = readlinesync.question("Digite o Nome do Titular da conta: ");
+        saldo = readlinesync.questionFloat("Digite o Saldo da conta (R$): ", {
+          limitMessage: "Valor inválido!",
+        });
+
+        tipo = contas.retornaTipo(numero);
+
+        switch (tipo) {
+          case 1:
+            limite = readlinesync.questionFloat(
+              "Digite o Limite da Conta (R$): ",
+              {
+                limitMessage: "Valor inválido!\n",
+              }
+            );
+            const novaContaCorrente = new ContaCorrente(
+              numero,
+              agencia,
+              tipo,
+              titular,
+              saldo,
+              limite
+            );
+            contas.atualizar(novaContaCorrente);
+            break;
+          case 2:
+            aniversario = readlinesync.questionInt(
+              "Digite o Dia do aniversário da Conta Poupança:",
+              {
+                limitMessage: "Número inválido!\n",
+              }
+            );
+
+            const novaContaPoupanca = new ContaPoupanca(
+              numero,
+              agencia,
+              tipo,
+              titular,
+              saldo,
+              aniversario
+            );
+            contas.atualizar(novaContaPoupanca);
+            break;
+        }
+
         keyPress();
         break;
+
       case 5:
         console.log(
-          colors.fg.whitestrong,
-          "\n\nApagar uma Conta\n\n",
-          colors.reset
+          `${colors.fg.whitestrong}\n\nApagar uma Conta\n\n${colors.reset}`
         );
 
+        numero = readlinesync.questionInt("Digite o número da Conta: ", {
+          limitMessage: "Número inválido!\n",
+        });
+
+        contas.deletar(numero);
         keyPress();
         break;
+
       case 6:
-        console.log(colors.fg.whitestrong, "\n\nSaque\n\n", colors.reset);
+        console.log(`${colors.fg.whitestrong}\n\nSaque\n\n${colors.reset}`);
 
         keyPress();
         break;
+
       case 7:
-        console.log(colors.fg.whitestrong, "\n\nDepósito\n\n", colors.reset);
+        console.log(`${colors.fg.whitestrong}\n\nDepósito\n\n${colors.reset}`);
 
         keyPress();
         break;
+
       case 8:
         console.log(
-          colors.fg.whitestrong,
-          "\n\nTransferência entre Contas\n\n",
-          colors.reset
+          `${colors.fg.whitestrong}\n\Transferência entre Contas\n\n${colors.reset}`
         );
 
         keyPress();
@@ -116,7 +237,13 @@ export function main() {
         );
         sobre();
         console.log(colors.reset, "");
-        process.exit(0);
+        return;
+      default:
+        console.log(
+          `${colors.fg.red}\nOpção inválida. Digite de 1 a 9.\n${colors.reset}`
+        );
+        keyPress();
+        break;
     }
   }
 }
@@ -142,9 +269,9 @@ function keyPress(): void {
   readlinesync.prompt();
 }
 
-function exibirMenu(): string {
-  return `
-  ${colors.bg.black}${colors.fg.green}*****************************************************
+function exibirMenu(): void {
+  console.log(`
+  ${colors.bg.black}${colors.fg.blue}*****************************************************
   
     $$ BANCO ZÉ CARIOCA $$
 
@@ -161,7 +288,7 @@ function exibirMenu(): string {
   9 - Sair                                 
   
   *****************************************************                        
-  ${colors.reset}`;
+  ${colors.reset}`);
 }
 
 main();
