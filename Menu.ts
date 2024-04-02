@@ -48,6 +48,14 @@ export function main() {
     });
 
     switch (opcao) {
+      case 0:
+        console.log(
+          colors.fg.magenta,
+          "\n$$ Banco Zé Carioca $$ - O jeito carioca de investir no seu futuro!"
+        );
+        sobre();
+        console.log(colors.reset, "");
+        return;
       case 1:
         console.log(
           `${colors.fg.whitestrong}\n\nCriar Conta\n\n${colors.reset}`
@@ -213,11 +221,29 @@ export function main() {
       case 6:
         console.log(`${colors.fg.whitestrong}\n\nSaque\n\n${colors.reset}`);
 
+        numero = readlinesync.questionInt("Digite o número da Conta: ", {
+          limitMessage: "Número inválido!\n",
+        });
+        valor = readlinesync.questionInt("Digite o valor do saque: ", {
+          limitMessage: "Valor inválido!\n",
+        });
+
+        contas.sacar(numero, valor);
+
         keyPress();
         break;
 
       case 7:
         console.log(`${colors.fg.whitestrong}\n\nDepósito\n\n${colors.reset}`);
+
+        numero = readlinesync.questionInt("Digite o número da Conta: ", {
+          limitMessage: "Número inválido!\n",
+        });
+        valor = readlinesync.questionInt("Digite o valor do depósito: ", {
+          limitMessage: "Valor inválido!\n",
+        });
+
+        contas.depositar(numero, valor);
 
         keyPress();
         break;
@@ -227,17 +253,40 @@ export function main() {
           `${colors.fg.whitestrong}\n\Transferência entre Contas\n\n${colors.reset}`
         );
 
+        numero = readlinesync.questionInt(
+          "Digite o número da Conta de Origem: ",
+          {
+            limitMessage: "Número inválido!\n",
+          }
+        );
+        numeroDestino = readlinesync.questionInt(
+          "Digite o número da Conta de Destino: ",
+          {
+            limitMessage: "Número inválido!\n",
+          }
+        );
+        valor = readlinesync.questionFloat(
+          "Digite o valor da transferência: ",
+          {
+            limitMessage: "Valor inválido!\n",
+          }
+        );
+
+        contas.transferir(numero, numeroDestino, valor);
+
         keyPress();
         break;
 
       case 9:
         console.log(
-          colors.fg.magenta,
-          "\n$$ Banco Zé Carioca $$ - O jeito carioca de investir no seu futuro!"
+          `\n${colors.fg.whitestrong}Consultar conta por titular${colors.reset}`
         );
-        sobre();
-        console.log(colors.reset, "");
-        return;
+
+        titular = readlinesync.question("Digite o Nome do Titular: ");
+        contas.procurarPorTitular(titular);
+
+        keyPress();
+        break;
       default:
         console.log(
           `${colors.fg.red}\nOpção inválida. Digite de 1 a 9.\n${colors.reset}`
@@ -285,7 +334,8 @@ function exibirMenu(): void {
   6 - Sacar                                
   7 - Depositar                            
   8 - Transferir valores entre Contas      
-  9 - Sair                                 
+  9 - Buscar Conta por Titular                       
+  0 - Sair
   
   *****************************************************                        
   ${colors.reset}`);

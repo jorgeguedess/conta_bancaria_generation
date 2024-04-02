@@ -7,6 +7,21 @@ export class ContaController implements ContaRepository {
 
   public numero: number = 0;
 
+  procurarPorTitular(titular: string): void {
+    let listaContasPorTitular = this.listaContas.filter((c) =>
+      c.titular.toLowerCase().includes(titular.toLowerCase())
+    );
+
+    if (listaContasPorTitular.length === 0) {
+      console.log(
+        `\n${colors.fg.redstrong}Titular ${titular} não foi encontrado${colors.reset}`
+      );
+      return;
+    }
+
+    listaContasPorTitular.forEach((conta) => conta.visualizar());
+  }
+
   procurarPorNumero(numero: number): void {
     const buscaConta = this.buscarNoArray(numero);
 
@@ -68,15 +83,55 @@ export class ContaController implements ContaRepository {
   }
 
   sacar(numero: number, valor: number): void {
-    throw new Error("Method not implemented.");
+    const conta = this.buscarNoArray(numero);
+
+    if (conta === null) {
+      console.log(
+        `${colors.fg.red}\nA Conta número: ${numero} não foi encontrada!${colors.reset}`
+      );
+      return;
+    }
+
+    if (conta.sacar(valor)) {
+      console.log(
+        `${colors.fg.green}\nO Saque na Conta número: ${numero} foi efetuado com sucesso!${colors.reset}`
+      );
+    }
   }
 
   depositar(numero: number, valor: number): void {
-    throw new Error("Method not implemented.");
+    const conta = this.buscarNoArray(numero);
+
+    if (conta === null) {
+      console.log(
+        `${colors.fg.red}\nA Conta número: ${numero} não foi encontrada!${colors.reset}`
+      );
+      return;
+    }
+
+    conta.depositar(valor);
+    console.log(
+      `${colors.fg.green}\nO Depósito na Conta número: ${numero} foi efetuada com sucesso!${colors.reset}`
+    );
   }
 
   transferir(numeroOrigem: number, numeroDestino: number, valor: number): void {
-    throw new Error("Method not implemented.");
+    const contaOrigem = this.buscarNoArray(numeroOrigem);
+    const contaDestino = this.buscarNoArray(numeroDestino);
+
+    if (contaOrigem === null && contaDestino === null) {
+      console.log(
+        `${colors.fg.red}\nA Conta número: ${numeroOrigem} e/ou a Conta numero: ${numeroDestino} não foram encontradas!${colors.reset}`
+      );
+      return;
+    }
+
+    if (contaOrigem?.sacar(valor)) {
+      contaDestino?.depositar(valor);
+      console.log(
+        `${colors.fg.green}\nA Transferência da Conta número: ${numeroOrigem} para a Conta número: ${numeroDestino} foi efetuada com sucesso!${colors.reset}`
+      );
+    }
   }
 
   /* Métodos Auxiliares */
